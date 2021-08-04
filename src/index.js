@@ -1,6 +1,9 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Counter from './counter';
 import { createStore, bindActionCreators } from 'redux';
 import reducer from './reducer';
-import { incAC, decAC, randAC } from './actions';
+import * as actions from './actions';
 
 const decEl = document.getElementById('dec');
 const incEl = document.getElementById('inc');
@@ -18,18 +21,43 @@ const bindActionCreator =
   };
 */
 
-const incDispatch = bindActionCreators(incAC, dispatch);
-const decDispatch = bindActionCreators(decAC, dispatch);
-const randDispatch = bindActionCreators(randAC, dispatch);
+// const incDispatch = bindActionCreators(incAC, dispatch);
+// const decDispatch = bindActionCreators(decAC, dispatch);
+// const randDispatch = bindActionCreators(randAC, dispatch);
 
-incEl.addEventListener('click', incDispatch);
-decEl.addEventListener('click', decDispatch);
+/*const { incDispatch, decDispatch, randDispatch } = bindActionCreators(
+  {
+    incDispatch: incAC,
+    decDispatch: decAC,
+    randDispatch: randAC,
+  },
+  dispatch
+);*/
+
+const { incAC, decAC, randAC } = bindActionCreators(actions, dispatch);
+
+/*
+incEl.addEventListener('click', incAC);
+decEl.addEventListener('click', decAC);
 randEl.addEventListener('click', () => {
   const payload = Math.round(Math.random() * 10);
-  randDispatch(payload);
+  randAC(payload);
 });
+*/
 
 const update = () => {
-  counterEl.innerHTML = store.getState();
+  ReactDOM.render(
+    <Counter
+      counter={store.getState()}
+      dec={decAC}
+      inc={incAC}
+      rnd={() => {
+        const value = Math.floor(Math.random() * 10);
+        randAC(value);
+      }}
+    />,
+    document.getElementById('root')
+  );
 };
+update();
 store.subscribe(update);
