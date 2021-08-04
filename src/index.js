@@ -1,17 +1,35 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { createStore, bindActionCreators } from 'redux';
+import reducer from './reducer';
+import { incAC, decAC, randAC } from './actions';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const decEl = document.getElementById('dec');
+const incEl = document.getElementById('inc');
+const randEl = document.getElementById('rand');
+const counterEl = document.getElementById('counter');
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const store = createStore(reducer);
+const { dispatch } = store;
+
+/*
+const bindActionCreator =
+  (creator, dispatch) =>
+  (...args) => {
+    dispatch(creator(...args));
+  };
+*/
+
+const incDispatch = bindActionCreators(incAC, dispatch);
+const decDispatch = bindActionCreators(decAC, dispatch);
+const randDispatch = bindActionCreators(randAC, dispatch);
+
+incEl.addEventListener('click', incDispatch);
+decEl.addEventListener('click', decDispatch);
+randEl.addEventListener('click', () => {
+  const payload = Math.round(Math.random() * 10);
+  randDispatch(payload);
+});
+
+const update = () => {
+  counterEl.innerHTML = store.getState();
+};
+store.subscribe(update);
