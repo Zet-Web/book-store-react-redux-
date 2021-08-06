@@ -26,6 +26,7 @@ const updateCartItem = (book, item = {}) => {
   };
 };
 const reducer = (state = initialState, action) => {
+  window.state = state;
   // console.log(action.type);
   switch (action.type) {
     case 'FETCH_BOOKS_REQUEST':
@@ -58,6 +59,25 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         cartItems: updateCartItems(state.cartItems, newItem, itemIndex),
+      };
+
+    case 'BOOK_DELETED':
+      const idBook = action.payload;
+      const newArr = state.cartItems.filter(({ id }) => id !== idBook);
+      console.log(newArr);
+      return {
+        ...state,
+        cartItems: [...newArr],
+      };
+    case 'BOOK_COUNT_INCREASE':
+      const idOfBook = action.payload;
+      const incItem = state.cartItems.find(({ id }) => id === idOfBook);
+      incItem.count += 1;
+      incItem.total += incItem.total;
+      console.log(incItem);
+      return {
+        ...state,
+        cartItems: [...state.cartItems],
       };
     /*case 'BOOK_ADDED_TO_CART':
       const bookId = action.payload;
