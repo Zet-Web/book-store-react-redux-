@@ -61,14 +61,26 @@ const reducer = (state = initialState, action) => {
         cartItems: updateCartItems(state.cartItems, newItem, itemIndex),
       };
 
-    case 'BOOK_DELETED':
+    /*    case 'BOOK_DELETED':
       const idBook = action.payload;
       const newArr = state.cartItems.filter(({ id }) => id !== idBook);
       console.log(newArr);
       return {
         ...state,
         cartItems: [...newArr],
+      };*/
+    case 'BOOK_DELETED':
+      // return [...cartItems.slice(0, idx), item, ...cartItems.slice(idx + 1)];
+      const idBook = action.payload;
+      const indexItem = state.cartItems.findIndex(({ id }) => id === idBook);
+      return {
+        ...state,
+        cartItems: [
+          ...state.cartItems.slice(0, indexItem),
+          ...state.cartItems.slice(indexItem + 1),
+        ],
       };
+
     case 'BOOK_COUNT_INCREASE':
       const idOfBook = action.payload;
       const incItem = state.cartItems.find(({ id }) => id === idOfBook);
@@ -79,43 +91,44 @@ const reducer = (state = initialState, action) => {
         ...state,
         cartItems: [...state.cartItems],
       };
-    /*case 'BOOK_ADDED_TO_CART':
-      const bookId = action.payload;
-      const book = state.books.find((book) => book.id === bookId);
-      const itemIndex = state.cartItems.findIndex(({ id }) => id === bookId);
-      const item = state.cartItems[itemIndex];
-      let newItem;
-      if (item) {
-        newItem = {
-          ...item,
-          count: item.count + 1,
-          total: item.total + book.price,
-        };
-      } else {
-        newItem = {
-          id: book.id,
-          title: book.title,
-          count: 1,
-          total: book.price,
-        };
-      }
-      if (itemIndex < 0) {
-        return {
-          ...state,
-          cartItems: [...state.cartItems, newItem],
-        };
-      } else {
-        return {
-          ...state,
-          cartItems: [
-            ...state.cartItems.slice(0, itemIndex),
-            newItem,
-            ...state.cartItems.slice(itemIndex + 1),
-          ],
-        };
-      }*/
+
     default:
       return state;
+    /*case 'BOOK_ADDED_TO_CART':
+     const bookId = action.payload;
+     const book = state.books.find((book) => book.id === bookId);
+     const itemIndex = state.cartItems.findIndex(({ id }) => id === bookId);
+     const item = state.cartItems[itemIndex];
+     let newItem;
+     if (item) {
+       newItem = {
+         ...item,
+         count: item.count + 1,
+         total: item.total + book.price,
+       };
+     } else {
+       newItem = {
+         id: book.id,
+         title: book.title,
+         count: 1,
+         total: book.price,
+       };
+     }
+     if (itemIndex < 0) {
+       return {
+         ...state,
+         cartItems: [...state.cartItems, newItem],
+       };
+     } else {
+       return {
+         ...state,
+         cartItems: [
+           ...state.cartItems.slice(0, itemIndex),
+           newItem,
+           ...state.cartItems.slice(itemIndex + 1),
+         ],
+       };
+     }*/
   }
 };
 export default reducer;
